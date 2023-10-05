@@ -27,7 +27,7 @@ Deixei o arquivo .ENV liberado para facilitar o processo de execução da aplica
 ## Test
 
 ```bash
-# unit tests
+# unit tests and integration tests
 $ npm run test
 ```
 
