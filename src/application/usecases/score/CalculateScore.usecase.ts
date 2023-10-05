@@ -9,6 +9,7 @@ import { SERVICE_NAME } from 'src/commons/envs';
 type Input = {
   userId: string;
 };
+
 type Output = {
   score: number;
 };

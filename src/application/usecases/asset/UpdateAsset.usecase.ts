@@ -9,8 +9,8 @@ type Input = {
   type: string;
   amount: number;
 };
-// eslint-disable-next-line @typescript-eslint/ban-types
-type Output = {};
+
+type Output = Promise<void>;
 
 export default class UpdateAssetUseCase implements UseCase<Input, Output> {
   constructor(

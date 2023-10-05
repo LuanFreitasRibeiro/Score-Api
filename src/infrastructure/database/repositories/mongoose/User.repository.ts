@@ -12,6 +12,7 @@ export default class MongooseUserRepositoryDatabase implements UserRepository {
     @InjectModel(MongooseUserEntity.name)
     public UserModel: Model<MongooseUserDocument>,
   ) {}
+
   async save(user: User): Promise<void> {
     await this.UserModel.create({
       ...user,
@@ -20,6 +21,7 @@ export default class MongooseUserRepositoryDatabase implements UserRepository {
       document: user.document.value,
     });
   }
+
   async update(id: string, user: User): Promise<void> {
     await this.UserModel.findOneAndUpdate({ userId: id }, user, { new: true });
   }
@@ -27,6 +29,7 @@ export default class MongooseUserRepositoryDatabase implements UserRepository {
   async delete(id: string): Promise<void> {
     await this.UserModel.findOneAndRemove({ userId: id });
   }
+
   async getOne(
     filter: Record<string, any>,
     options?: QueryOptions,

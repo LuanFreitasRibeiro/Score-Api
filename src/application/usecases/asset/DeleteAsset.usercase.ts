@@ -7,8 +7,8 @@ import { DomainError } from 'src/commons/errors/domain-error';
 type Input = {
   assetId: string;
 };
-// eslint-disable-next-line @typescript-eslint/ban-types
-type Output = {};
+
+type Output = Promise<void>;
 
 export default class DeleteAssetUseCase implements UseCase<Input, Output> {
   constructor(

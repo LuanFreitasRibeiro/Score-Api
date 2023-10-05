@@ -7,12 +7,14 @@ import { DomainError } from 'src/commons/errors/domain-error';
 type Input = {
   userId: string;
 };
+
 type Output = {
   userId: string;
   name: string;
   email: any;
   document: any;
 };
+
 export default class GetUserByIdUseCase implements UseCase<Input, Output> {
   constructor(
     @Inject('UserRepository')

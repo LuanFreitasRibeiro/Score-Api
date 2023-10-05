@@ -7,6 +7,7 @@ import { DomainError } from 'src/commons/errors/domain-error';
 type Input = {
   userId: string;
 };
+
 type Output = {
   scoreId: string;
   userId: string;
