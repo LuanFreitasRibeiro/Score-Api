@@ -10,6 +10,10 @@ import GetByIdUseCase from 'src/application/usecases/asset/GetAssetById.usecase'
 import UpdateAssetUseCase from 'src/application/usecases/asset/UpdateAsset.usecase';
 import DeleteAssetUseCase from 'src/application/usecases/asset/DeleteAsset.usercase';
 import GetAssetsUseCase from 'src/application/usecases/asset/GetAssets.usecase';
+import MongooseUserEntity, {
+  MongooseUserSchema,
+} from '../database/repositories/mongoose/schemas/User.schema';
+import MongooseUserRepositoryDatabase from '../database/repositories/mongoose/User.repository';
 
 @Module({
   imports: [
@@ -17,6 +21,10 @@ import GetAssetsUseCase from 'src/application/usecases/asset/GetAssets.usecase';
       {
         name: MongooseAssetEntity.name,
         schema: MongooseAssetSchema,
+      },
+      {
+        name: MongooseUserEntity.name,
+        schema: MongooseUserSchema,
       },
     ]),
   ],
@@ -29,6 +37,10 @@ import GetAssetsUseCase from 'src/application/usecases/asset/GetAssets.usecase';
     {
       provide: 'AssetRepository',
       useClass: MongooseAssetRepositoryDatabase,
+    },
+    {
+      provide: 'UserRepository',
+      useClass: MongooseUserRepositoryDatabase,
     },
   ],
   controllers: [AssetController],

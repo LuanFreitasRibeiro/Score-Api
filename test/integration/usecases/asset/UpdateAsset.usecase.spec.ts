@@ -38,7 +38,7 @@ describe('Integration Test - Update Asset Usecase', () => {
     expect(assetRepository).toBeDefined();
   });
 
-  it.skip('Should update a Asset', async () => {
+  it('Should update a Asset', async () => {
     assetRepository = {
       async save(asset: any): Promise<void> {},
       async getById(id: string): Promise<any> {
@@ -63,7 +63,8 @@ describe('Integration Test - Update Asset Usecase', () => {
       amount: 15000,
     };
     const updateUseCase = new UpdateAssetUseCase(assetRepository);
-    await expect(() => updateUseCase.execute(input)).toBeCalled();
+    const output = await updateUseCase.execute(input);
+    await expect(output).toBeUndefined();
   });
 
   it('Should throw an error: Asset not found', async () => {

@@ -10,6 +10,10 @@ import DeleteDebtUseCase from 'src/application/usecases/debt/DeleteDebt.usercase
 import MongooseDebtRepositoryDatabase from '../database/repositories/mongoose/Debt.repository';
 import DebtController from 'src/presentation/controllers/Debt.controller';
 import GetDebtsUseCase from 'src/application/usecases/debt/GetDebts.usecase';
+import MongooseUserEntity, {
+  MongooseUserSchema,
+} from '../database/repositories/mongoose/schemas/User.schema';
+import MongooseUserRepositoryDatabase from '../database/repositories/mongoose/User.repository';
 
 @Module({
   imports: [
@@ -17,6 +21,10 @@ import GetDebtsUseCase from 'src/application/usecases/debt/GetDebts.usecase';
       {
         name: MongooseDebtEntity.name,
         schema: MongooseDebtSchema,
+      },
+      {
+        name: MongooseUserEntity.name,
+        schema: MongooseUserSchema,
       },
     ]),
   ],
@@ -29,6 +37,10 @@ import GetDebtsUseCase from 'src/application/usecases/debt/GetDebts.usecase';
     {
       provide: 'DebtRepository',
       useClass: MongooseDebtRepositoryDatabase,
+    },
+    {
+      provide: 'UserRepository',
+      useClass: MongooseUserRepositoryDatabase,
     },
   ],
   controllers: [DebtController],

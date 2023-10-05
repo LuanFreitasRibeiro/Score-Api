@@ -37,18 +37,17 @@ describe('Unit Test - Create User Use Case', () => {
   });
 
   it('Should create a User', async () => {
+    const input = {
+      name: 'John Doe',
+      email: 'john.doe@gmail.com',
+      document: '22668510040',
+      password: 'John@1234',
+    };
     userRepository = {
       async save(user: User): Promise<void> {},
       async getOne(email: any): Promise<any> {},
       async update(id: string, user: any): Promise<any> {},
       async delete(id: string): Promise<void> {},
-    };
-
-    const input = {
-      name: 'Jhon Doe',
-      email: 'john.doe@gmail.com',
-      document: '22668510040',
-      password: '123456',
     };
     const createUseCase = new CreateUserUseCase(userRepository);
     const output = await createUseCase.execute(input);
@@ -62,9 +61,8 @@ describe('Unit Test - Create User Use Case', () => {
       async update(id: string, user: any): Promise<any> {},
       async delete(id: string): Promise<void> {},
     };
-
     const input = {
-      name: 'Jhon Doe',
+      name: 'John Doe',
       email: 'john.doe@gmail',
       document: '22668510040',
       password: '123456',

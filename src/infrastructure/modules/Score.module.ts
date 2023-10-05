@@ -17,6 +17,10 @@ import MongooseAssetEntity, {
   MongooseAssetSchema,
 } from '../database/repositories/mongoose/schemas/Asset.schema';
 import ScoreController from 'src/presentation/controllers/Score.controller';
+import MongooseUserEntity, {
+  MongooseUserSchema,
+} from '../database/repositories/mongoose/schemas/User.schema';
+import MongooseUserRepositoryDatabase from '../database/repositories/mongoose/User.repository';
 
 @Module({
   imports: [
@@ -32,6 +36,10 @@ import ScoreController from 'src/presentation/controllers/Score.controller';
       {
         name: MongooseAssetEntity.name,
         schema: MongooseAssetSchema,
+      },
+      {
+        name: MongooseUserEntity.name,
+        schema: MongooseUserSchema,
       },
     ]),
   ],
@@ -51,6 +59,10 @@ import ScoreController from 'src/presentation/controllers/Score.controller';
     {
       provide: 'AssetRepository',
       useClass: MongooseAssetRepositoryDatabase,
+    },
+    {
+      provide: 'UserRepository',
+      useClass: MongooseUserRepositoryDatabase,
     },
   ],
   controllers: [ScoreController],
