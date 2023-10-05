@@ -53,7 +53,7 @@ export default class User {
     );
   }
 
-  validatePassword(password: string) {
+  authenticatePassword(password: string) {
     return this.password.validate(password);
   }
 
