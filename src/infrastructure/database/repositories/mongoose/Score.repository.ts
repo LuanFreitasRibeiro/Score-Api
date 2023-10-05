@@ -14,9 +14,11 @@ export default class MongooseScoreRepositoryDatabase
     @InjectModel(MongooseScoreEntity.name)
     public ScoreModel: Model<MongooseScoreDocument>,
   ) {}
+
   async save(score: Score): Promise<void> {
     await this.ScoreModel.create(score);
   }
+
   async getOne(
     filter: Record<string, any>,
     options?: QueryOptions,
@@ -24,6 +26,7 @@ export default class MongooseScoreRepositoryDatabase
     const score = await this.ScoreModel.findOne(filter, {}, options);
     return score == null ? null : MongooseScoreMapper.toEntity(score);
   }
+
   async update(id: string, score: Score): Promise<void> {
     await this.ScoreModel.findOneAndUpdate({ scoreId: id }, score, {
       new: true,

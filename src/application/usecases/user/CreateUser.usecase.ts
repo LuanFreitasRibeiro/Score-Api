@@ -9,9 +9,11 @@ type Input = {
   document: string;
   password: string;
 };
+
 type Output = {
   userId: string;
 };
+
 export default class CreateUserUseCase implements UseCase<Input, Output> {
   constructor(
     @Inject('UserRepository')

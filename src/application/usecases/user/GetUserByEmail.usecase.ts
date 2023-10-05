@@ -7,6 +7,7 @@ import { DomainError } from 'src/commons/errors/domain-error';
 type Input = {
   email: string;
 };
+
 type Output = {
   userId: string;
   name: string;
