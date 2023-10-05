@@ -19,6 +19,9 @@ http://localhost:3000/swagger
 ```bash
 #docker
 docker-compose up -d
+
+Após executar o comando acima, é necessário esperar um pouco para a aplicação subir por completo no docker.
+Deixei o arquivo .ENV liberado para facilitar o processo de execução da aplicação. 
 ```
 
 ## Test
