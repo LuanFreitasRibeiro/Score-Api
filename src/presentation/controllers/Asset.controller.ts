@@ -9,9 +9,10 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import CreateAssetUseCase from 'src/application/usecases/asset/CreateAsset.usecase';
 import { AssetDTO } from '../dto/asset/Asset.dto';
 import GetByIdUseCase from 'src/application/usecases/asset/GetAssetById.usecase';
@@ -21,9 +22,12 @@ import InputListAssetDTO from '../dto/asset/InputListAsset.dto';
 import GetAssetsUseCase from 'src/application/usecases/asset/GetAssets.usecase';
 import PaginateAssetDTO from '../dto/asset/PaginateAsset.dto';
 import CreateAssetDTO from '../dto/asset/CreateAsset.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('assets')
 @ApiTags('Asset')
+@ApiBearerAuth()
+@UseGuards(AuthGuard('jwt'))
 export default class AssetController {
   constructor(
     private readonly createAssetUseCase: CreateAssetUseCase,

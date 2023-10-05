@@ -9,6 +9,7 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -21,9 +22,11 @@ import UpdateDebtUseCase from 'src/application/usecases/debt/UpdateDebt.usecase'
 import DeleteDebtUseCase from 'src/application/usecases/debt/DeleteDebt.usercase';
 import GetDebtsUseCase from 'src/application/usecases/debt/GetDebts.usecase';
 import CreateDebtDTO from '../dto/debt/CreateDebt.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('debts')
 @ApiTags('Debt')
+@UseGuards(AuthGuard('jwt'))
 export default class DebtController {
   constructor(
     private readonly createDebtUseCase: CreateDebtUseCase,

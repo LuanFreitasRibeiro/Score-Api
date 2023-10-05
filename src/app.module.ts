@@ -7,6 +7,7 @@ import { DATABASE_URI } from './commons/envs';
 import DebtModule from './infrastructure/modules/Debt.module';
 import UserModule from './infrastructure/modules/User.module';
 import ScoreModule from './infrastructure/modules/Score.module';
+import AuthModule from './infrastructure/modules/Auth.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import ScoreModule from './infrastructure/modules/Score.module';
     DebtModule,
     UserModule,
     ScoreModule,
+    AuthModule,
     MongooseModule.forRoot(DATABASE_URI),
   ],
   providers: [
