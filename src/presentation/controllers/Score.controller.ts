@@ -1,9 +1,11 @@
-import { Controller, Param, Post } from '@nestjs/common';
+import { Controller, Param, Post, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import CalculateScoreUseCase from 'src/application/usecases/score/CalculateScore.usecase';
 
 @Controller('scores')
 @ApiTags('Score')
+@UseGuards(AuthGuard('jwt'))
 export default class ScoreController {
   constructor(private readonly createScoreUseCase: CalculateScoreUseCase) {}
 

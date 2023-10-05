@@ -1,8 +1,8 @@
 import UUIDGenerator from '../identity/UUIDGenerator';
 import Cpf from './Cpf';
 import Email from './Email';
-import Password from './Password';
-import SHA1Password from './SHA1Password';
+import SHA1Password from './BCryptPassword';
+import Password from './BCryptPassword';
 
 export default class User {
   readonly updatedAt: Date;
@@ -51,10 +51,6 @@ export default class User {
       SHA1Password.create(password),
       new Cpf(document),
     );
-  }
-
-  authenticatePassword(password: string) {
-    return this.password.validate(password);
   }
 
   toJSON(): Required<{ id: string } & User> {

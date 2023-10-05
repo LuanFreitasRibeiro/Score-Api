@@ -26,6 +26,7 @@ export default class CreateUserUseCase implements UseCase<Input, Output> {
       input.password,
       input.document,
     );
+    await this.userRepository.save(user);
     return {
       userId: user.userId,
     };

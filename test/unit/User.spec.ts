@@ -11,9 +11,6 @@ describe('Unit Test - User', () => {
     );
     expect(user.userId).toBeDefined();
     expect(user.email.value).toBe('john.doe@gmail.com');
-    expect(user.password.value).toBe(
-      '7c4a8d09ca3762af61e59520943dc26494f8941b',
-    );
   });
 
   it('Should restore an existing user', () => {
@@ -27,8 +24,5 @@ describe('Unit Test - User', () => {
     );
     expect(user.userId).toBe(userId);
     expect(user.email.value).toBe('john.doe@gmail.com');
-    expect(user.password.value).toBe(
-      '7c4a8d09ca3762af61e59520943dc26494f8941b',
-    );
   });
 });
