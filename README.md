@@ -39,4 +39,4 @@ A ideia inicial era salvar o score no momento do cadastro do usuário, e a cada 
 
 #### Authentication and Authorization
 
-Esse item ainda não foi abordado na aplicação, a ideia é ter login na aplicação onde terão usuários admins com acesso mais permissível e usuários comuns que terão acesso somente ao que pertence à ele. Foi iniciado a parte de criação do usuário já com a parte de criptografia de senha.
+A parte de autenticação foi implementada, faltando somente a parte de autorização.
