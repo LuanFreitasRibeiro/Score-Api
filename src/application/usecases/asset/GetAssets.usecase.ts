@@ -1,5 +1,5 @@
 import { Inject } from '@nestjs/common';
-import AssetRepository from 'src/application/repository/AssetRespository.interface';
+import AssetRepository from 'src/application/repository/AssetRepository.interface';
 import UseCase from '../interfaces/UseCase.interface';
 import Asset from 'src/domain/asset/Asset';
 

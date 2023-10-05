@@ -5,7 +5,7 @@ import { getModelToken } from '@nestjs/mongoose';
 import MongooseAssetEntity from '../../../../src/infrastructure/database/repositories/mongoose/schemas/Asset.schema';
 import AssetRepository, {
   AssetSearchParams,
-} from '../../../../src/application/repository/AssetRespository.interface';
+} from '../../../../src/application/repository/AssetRepository.interface';
 import GetByIdUseCase from '../../../../src/application/usecases/asset/GetAssetById.usecase';
 import Asset from '../../../../src/domain/asset/Asset';
 

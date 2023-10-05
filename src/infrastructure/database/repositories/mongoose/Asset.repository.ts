@@ -1,7 +1,7 @@
 import { InjectModel } from '@nestjs/mongoose';
 import AssetRepository, {
   AssetSearchParams,
-} from 'src/application/repository/AssetRespository.interface';
+} from 'src/application/repository/AssetRepository.interface';
 import Asset from '../../../../domain/asset/Asset';
 import MongooseAssetEntity, {
   MongooseAssetDocument,

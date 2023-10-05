@@ -1,5 +1,5 @@
 import { HttpStatus, Inject } from '@nestjs/common';
-import AssetRepository from 'src/application/repository/AssetRespository.interface';
+import AssetRepository from 'src/application/repository/AssetRepository.interface';
 import UseCase from '../interfaces/UseCase.interface';
 import { DomainError } from 'src/commons/errors/domain-error';
 import { SERVICE_NAME } from 'src/commons/envs';

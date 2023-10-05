@@ -1,5 +1,5 @@
 import { Inject } from '@nestjs/common';
-import DebtRepository from 'src/application/repository/DebtRespository.interface';
+import DebtRepository from 'src/application/repository/DebtRepository.interface';
 import UseCase from '../interfaces/UseCase.interface';
 import Debt from 'src/domain/debt/Debt';
 

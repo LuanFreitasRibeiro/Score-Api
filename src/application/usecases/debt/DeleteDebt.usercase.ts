@@ -1,6 +1,6 @@
 import { HttpStatus, Inject } from '@nestjs/common';
 import UseCase from '../interfaces/UseCase.interface';
-import DebtRepository from 'src/application/repository/DebtRespository.interface';
+import DebtRepository from 'src/application/repository/DebtRepository.interface';
 import { SERVICE_NAME } from 'src/commons/envs';
 import { DomainError } from 'src/commons/errors/domain-error';
 

@@ -1,8 +1,10 @@
 import ScoreRepository from 'src/application/repository/ScoreRepository.interface';
 import UseCase from '../interfaces/UseCase.interface';
-import { Inject } from '@nestjs/common';
-import DebtRepository from 'src/application/repository/DebtRespository.interface';
-import AssetRepository from 'src/application/repository/AssetRespository.interface';
+import { HttpStatus, Inject } from '@nestjs/common';
+import DebtRepository from 'src/application/repository/DebtRepository.interface';
+import AssetRepository from 'src/application/repository/AssetRepository.interface';
+import { DomainError } from 'src/commons/errors/domain-error';
+import { SERVICE_NAME } from 'src/commons/envs';
 
 type Input = {
   userId: string;
@@ -24,7 +26,19 @@ export default class CalculateScoreUseCase implements UseCase<Input, Output> {
     const assetsPoint = 0.61;
     const debtsPoint = 0.39;
     const debts = await this.debtRepository.get({ userId: input.userId });
+    if (!debts)
+      throw new DomainError(
+        'Debts not found',
+        `${SERVICE_NAME}/debt-not-found`,
+        HttpStatus.NOT_FOUND,
+      );
     const assets = await this.assetRepository.get({ userId: input.userId });
+    if (!assets)
+      throw new DomainError(
+        'Assets not found',
+        `${SERVICE_NAME}/asset-not-found`,
+        HttpStatus.NOT_FOUND,
+      );
     const creditScore =
       assets.reduce((total, asset) => total + asset.amount, 0) * assetsPoint -
       debts.reduce((total, debt) => total + debt.amount, 0) * debtsPoint;

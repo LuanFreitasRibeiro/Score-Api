@@ -8,7 +8,6 @@ import MongooseUserRepositoryDatabase from '../database/repositories/mongoose/Us
 import UserController from 'src/presentation/controllers/User.controller';
 import GetUserByEmailUseCase from 'src/application/usecases/user/GetUserByEmail.usecase';
 import GetUserByIdUseCase from 'src/application/usecases/user/GetUserById.usecase';
-import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [
@@ -16,19 +15,6 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
       {
         name: MongooseUserEntity.name,
         schema: MongooseUserSchema,
-      },
-    ]),
-    ClientsModule.register([
-      {
-        name: 'Store',
-        transport: Transport.RMQ,
-        options: {
-          urls: ['amqp://localhost'],
-          queue: 'create-score',
-          queueOptions: {
-            durable: true,
-          },
-        },
       },
     ]),
   ],

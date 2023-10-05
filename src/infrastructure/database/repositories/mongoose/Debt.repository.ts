@@ -1,6 +1,6 @@
 import DebtRepository, {
   DebtSearchParams,
-} from 'src/application/repository/DebtRespository.interface';
+} from 'src/application/repository/DebtRepository.interface';
 import MongooseDebtEntity, {
   MongooseDebtDocument,
 } from './schemas/Debt.schema';
