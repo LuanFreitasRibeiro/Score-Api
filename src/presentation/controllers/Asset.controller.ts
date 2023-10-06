@@ -27,11 +27,13 @@ import InputListAssetDTO from '../dto/asset/InputListAsset.dto';
 import GetAssetsUseCase from 'src/application/usecases/asset/GetAssets.usecase';
 import PaginateAssetDTO from '../dto/asset/PaginateAsset.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { Roles } from 'src/application/auth/roles/roles.decorator';
+import { RoleGuard } from 'src/application/auth/role/role.guard';
 
 @Controller('assets')
 @ApiTags('Asset')
 @ApiBearerAuth()
-@UseGuards(AuthGuard('jwt'))
+@UseGuards(AuthGuard('jwt'), RoleGuard)
 export default class AssetController {
   constructor(
     private readonly createAssetUseCase: CreateAssetUseCase,
@@ -65,6 +67,7 @@ export default class AssetController {
     }
   }
 
+  @Roles('admin')
   @Get()
   @ApiOperation({ summary: 'Get a asset by params' })
   @ApiResponse({ status: 200, type: AssetDTO })

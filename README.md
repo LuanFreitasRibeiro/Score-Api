@@ -43,4 +43,4 @@ A ideia inicial era salvar o score no momento do cadastro do usuário, e a cada 
 
 #### Authentication and Authorization
 
-A parte de autenticação foi implementada, faltando somente a parte de autorização.
+Foi implementado. Faltando somente a parte de controle de acesso para ficar completo. Tentei criar um usuário admin no momento em que a collection User é criada, dessa forma teria sempre um usuário admin e eu conseguiria bloquear a rota de createUser somente para os users que possuem essa role.
