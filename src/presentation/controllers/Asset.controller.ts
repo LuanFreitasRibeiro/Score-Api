@@ -26,7 +26,6 @@ import DeleteAssetUseCase from 'src/application/usecases/asset/DeleteAsset.userc
 import InputListAssetDTO from '../dto/asset/InputListAsset.dto';
 import GetAssetsUseCase from 'src/application/usecases/asset/GetAssets.usecase';
 import PaginateAssetDTO from '../dto/asset/PaginateAsset.dto';
-import CreateAssetDTO from '../dto/asset/CreateAsset.dto';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('assets')

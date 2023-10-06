@@ -3,6 +3,7 @@ import { getModelToken } from '@nestjs/mongoose';
 import { Test } from '@nestjs/testing';
 import UserRepository from 'src/application/repository/UserRepository.interface';
 import CreateUserUseCase from 'src/application/usecases/user/CreateUser.usecase';
+import { Role } from 'src/commons/enums/Role.enum';
 import User from 'src/domain/user/User';
 import MongooseUserRepositoryDatabase from 'src/infrastructure/database/repositories/mongoose/User.repository';
 import MongooseUserEntity from 'src/infrastructure/database/repositories/mongoose/schemas/User.schema';
@@ -42,6 +43,7 @@ describe('Unit Test - Create User Use Case', () => {
       email: 'john.doe@gmail.com',
       document: '22668510040',
       password: 'John@1234',
+      role: Role.Customer,
     };
     userRepository = {
       async save(user: User): Promise<void> {},
@@ -66,6 +68,7 @@ describe('Unit Test - Create User Use Case', () => {
       email: 'john.doe@gmail',
       document: '22668510040',
       password: '123456',
+      role: Role.Customer,
     };
     const createUseCase = new CreateUserUseCase(userRepository);
     await expect(() => createUseCase.execute(input)).rejects.toThrow(

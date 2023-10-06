@@ -12,6 +12,7 @@ type Output = {
   name: string;
   email: any;
   document: any;
+  role: any;
 };
 
 export default class ValidateUserUseCase implements UseCase<Input, Output> {
@@ -31,6 +32,7 @@ export default class ValidateUserUseCase implements UseCase<Input, Output> {
       name: user.name,
       email: user.email,
       document: user.document,
+      role: user.role,
     };
   }
 }

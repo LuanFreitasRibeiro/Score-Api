@@ -14,6 +14,7 @@ import MongooseAssetRepositoryDatabase from 'src/infrastructure/database/reposit
 import MongooseUserRepositoryDatabase from 'src/infrastructure/database/repositories/mongoose/User.repository';
 import MongooseAssetEntity from 'src/infrastructure/database/repositories/mongoose/schemas/Asset.schema';
 import MongooseUserEntity from 'src/infrastructure/database/repositories/mongoose/schemas/User.schema';
+import { Role } from 'src/commons/enums/Role.enum';
 
 const mockCacheManager = {
   set: jest.fn(),
@@ -75,6 +76,7 @@ describe('Integration Test - Create Asset Usecase', () => {
       'John Doe',
       'John@1234',
       '22668510040',
+      Role.Customer,
     );
     assetRepository = {
       async save(asset: any): Promise<void> {},
