@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { getModelToken } from '@nestjs/mongoose';
 import { Test } from '@nestjs/testing';
+import { Cache } from 'cache-manager';
 import ScoreRepository from 'src/application/repository/ScoreRepository.interface';
 import UserRepository from 'src/application/repository/UserRepository.interface';
 import CreateScoreUseCase from 'src/application/usecases/score/CreateScore.usecase';
@@ -11,10 +12,19 @@ import MongooseUserRepositoryDatabase from 'src/infrastructure/database/reposito
 import MongooseScoreEntity from 'src/infrastructure/database/repositories/mongoose/schemas/Score.schema';
 import MongooseUserEntity from 'src/infrastructure/database/repositories/mongoose/schemas/User.schema';
 
+const mockCacheManager = {
+  set: jest.fn(),
+  get: jest.fn(),
+  del: jest.fn(),
+  reset: jest.fn(),
+};
+
+
 describe('Integration Test - Create Score Use Case', () => {
   let useCase: CreateScoreUseCase;
   let scoreRepository: ScoreRepository;
   let userRepository: UserRepository;
+  let cache: Cache;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -36,12 +46,17 @@ describe('Integration Test - Create Score Use Case', () => {
           provide: getModelToken(MongooseUserEntity.name),
           useValue: {},
         },
+        {
+          provide: 'CACHE_MANAGER',
+          useValue: mockCacheManager,
+        },
       ],
     }).compile();
 
     useCase = moduleRef.get(CreateScoreUseCase);
     scoreRepository = moduleRef.get('ScoreRepository');
     userRepository = moduleRef.get('UserRepository');
+    cache = moduleRef.get('CACHE_MANAGER');
     jest.clearAllMocks();
   });
 
@@ -49,9 +64,16 @@ describe('Integration Test - Create Score Use Case', () => {
     expect(useCase).toBeDefined();
     expect(scoreRepository).toBeDefined();
     expect(userRepository).toBeDefined();
+    expect(cache).toBeDefined();
   });
 
   it('Should create a Score', async () => {
+    const user = await User.create(
+      'john.doe@gmail.com',
+      'John Doe',
+      'John@1234',
+      '22668510040',
+    );
     scoreRepository = {
       async save(score: Score): Promise<void> {},
       async getOne(email: any): Promise<any> {},
@@ -60,19 +82,18 @@ describe('Integration Test - Create Score Use Case', () => {
     userRepository = {
       async save(user: User): Promise<void> {},
       async getOne(email: any): Promise<any> {
-        return User.create(
-          'john.doe@gmail.com',
-          'John Doe',
-          'John@1234',
-          '22668510040',
-        );
+        return user;
       },
       async update(id: string, user: any): Promise<any> {},
       async delete(id: string): Promise<void> {},
     };
+    const userId: string = user.userId;
+    mockCacheManager.set('userId_cached', userId);
+    mockCacheManager.get('userId_cached');
     const createScoreUseCase = new CreateScoreUseCase(
       scoreRepository,
       userRepository,
+      cache,
     );
     const input = {
       userId: '',

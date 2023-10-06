@@ -1,12 +1,14 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import UserDTO from '../dto/user/User.dto';
 import CreateUserUseCase from 'src/application/usecases/user/CreateUser.usecase';
 import GetUserByEmailUseCase from 'src/application/usecases/user/GetUserByEmail.usecase';
 import GetUserByIdUseCase from 'src/application/usecases/user/GetUserById.usecase';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('users')
 @ApiTags('User')
+@ApiBearerAuth()
 export default class UserController {
   constructor(
     private readonly createUserUseCase: CreateUserUseCase,
@@ -27,6 +29,7 @@ export default class UserController {
 
   @Get('/email/:email')
   @ApiOperation({ summary: 'Get a user by email' })
+  @UseGuards(AuthGuard('jwt'))
   async getByEmail(@Param('email') email: string) {
     try {
       const output = await this.getUserByEmailUseCase.execute({ email });
@@ -38,6 +41,7 @@ export default class UserController {
 
   @Get('/id/:id')
   @ApiOperation({ summary: 'Get a user by id' })
+  @UseGuards(AuthGuard('jwt'))
   async getById(@Param('id') id: string) {
     try {
       const output = await this.getUserByIdUseCase.execute({ userId: id });
