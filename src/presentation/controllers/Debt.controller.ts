@@ -40,7 +40,7 @@ export default class DebtController {
   @Post()
   @ApiOperation({ summary: 'Create a Debt' })
   @ApiResponse({ status: 201 })
-  async create(@Body() input: CreateDebtDTO) {
+  async create(@Body() input: DebtDTO) {
     try {
       const output = await this.createDebtUseCase.execute(input);
       return output;

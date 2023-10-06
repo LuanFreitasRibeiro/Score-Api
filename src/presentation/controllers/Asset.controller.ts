@@ -45,7 +45,7 @@ export default class AssetController {
   @Post()
   @ApiOperation({ summary: 'Create a asset' })
   @ApiResponse({ status: 201 })
-  async create(@Body() input: CreateAssetDTO) {
+  async create(@Body() input: AssetDTO) {
     try {
       const output = await this.createAssetUseCase.execute(input);
       return output;
