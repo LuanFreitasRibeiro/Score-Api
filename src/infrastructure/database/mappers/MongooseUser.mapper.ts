@@ -9,6 +9,7 @@ export default class MongooseUserMapper {
       data.email as any,
       data.password as any,
       data.document as any,
+      data.role,
       data.createdAt,
       data.updatedAt,
     );

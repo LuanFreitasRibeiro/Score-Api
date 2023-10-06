@@ -18,6 +18,9 @@ export default class MongooseUserEntity extends Document {
   @Prop({ type: String, required: true })
   document: string;
 
+  @Prop({ type: String, required: true })
+  role: string;
+
   @Prop({ type: Date, required: true })
   createdAt: Date;
 

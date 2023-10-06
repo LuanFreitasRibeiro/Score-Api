@@ -17,6 +17,6 @@ export default class JwtStrategy extends PassportStrategy(Strategy) {
   async validate(payload: any) {
     const userId: string = payload.sub;
     await this.cacheManager.set('userId_cached', userId);
-    return { id: payload.sub, email: payload.email };
+    return { id: payload.sub, email: payload.email, role: payload.role };
   }
 }

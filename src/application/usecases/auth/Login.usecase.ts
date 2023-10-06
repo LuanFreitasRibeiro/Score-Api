@@ -15,6 +15,7 @@ export default class LoginUseCase implements UseCase<Input, Output> {
     const payload = {
       sub: input.userId,
       email: input.email,
+      role: input.role,
     };
 
     return {

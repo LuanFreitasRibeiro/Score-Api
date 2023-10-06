@@ -5,6 +5,8 @@ import CreateUserUseCase from 'src/application/usecases/user/CreateUser.usecase'
 import GetUserByEmailUseCase from 'src/application/usecases/user/GetUserByEmail.usecase';
 import GetUserByIdUseCase from 'src/application/usecases/user/GetUserById.usecase';
 import { AuthGuard } from '@nestjs/passport';
+import { Roles } from 'src/application/auth/roles/roles.decorator';
+import { RoleGuard } from 'src/application/auth/role/role.guard';
 
 @Controller('users')
 @ApiTags('User')
@@ -27,9 +29,10 @@ export default class UserController {
     }
   }
 
+  @Roles('admin')
   @Get('/email/:email')
   @ApiOperation({ summary: 'Get a user by email' })
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), RoleGuard)
   async getByEmail(@Param('email') email: string) {
     try {
       const output = await this.getUserByEmailUseCase.execute({ email });
@@ -39,9 +42,10 @@ export default class UserController {
     }
   }
 
+  @Roles('admin')
   @Get('/id/:id')
   @ApiOperation({ summary: 'Get a user by id' })
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), RoleGuard)
   async getById(@Param('id') id: string) {
     try {
       const output = await this.getUserByIdUseCase.execute({ userId: id });

@@ -4,6 +4,7 @@ import { Test } from '@nestjs/testing';
 import UserRepository from 'src/application/repository/UserRepository.interface';
 import CreateUserUseCase from 'src/application/usecases/user/CreateUser.usecase';
 import GetUserByEmailUseCase from 'src/application/usecases/user/GetUserByEmail.usecase';
+import { Role } from 'src/commons/enums/Role.enum';
 import User from 'src/domain/user/User';
 import MongooseUserRepositoryDatabase from 'src/infrastructure/database/repositories/mongoose/User.repository';
 import MongooseUserEntity from 'src/infrastructure/database/repositories/mongoose/schemas/User.schema';
@@ -46,6 +47,7 @@ describe('Unit Test - Get User By Email Use Case', () => {
           'John Doe',
           '123456',
           '22668510040',
+          Role.Customer,
         );
       },
       async update(id: string, user: any): Promise<any> {},

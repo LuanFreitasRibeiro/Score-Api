@@ -5,6 +5,7 @@ import { Cache } from 'cache-manager';
 import ScoreRepository from 'src/application/repository/ScoreRepository.interface';
 import UserRepository from 'src/application/repository/UserRepository.interface';
 import CreateScoreUseCase from 'src/application/usecases/score/CreateScore.usecase';
+import { Role } from 'src/commons/enums/Role.enum';
 import Score from 'src/domain/score/Score';
 import User from 'src/domain/user/User';
 import MongooseScoreRepositoryDatabase from 'src/infrastructure/database/repositories/mongoose/Score.repository';
@@ -73,6 +74,7 @@ describe('Integration Test - Create Score Use Case', () => {
       'John Doe',
       'John@1234',
       '22668510040',
+      Role.Customer,
     );
     scoreRepository = {
       async save(score: Score): Promise<void> {},

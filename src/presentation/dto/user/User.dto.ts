@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { classToClass, plainToClass } from 'class-transformer';
 import { Matches } from 'class-validator';
+import { Role } from 'src/commons/enums/Role.enum';
 import { RegExHelper } from 'src/commons/helpers/regex.helper';
 import User from 'src/domain/user/User';
 
@@ -40,6 +41,14 @@ export default class UserDTO {
     example: '22668510040',
   })
   document: string;
+
+  @ApiProperty({
+    description: 'Role',
+    type: String,
+    required: true,
+    example: 'customer',
+  })
+  role: Role;
 
   public static factory(user: User) {
     const resultQueryDto = plainToClass(UserDTO, user.toJSON(), {

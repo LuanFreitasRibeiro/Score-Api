@@ -12,7 +12,12 @@ import {
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { DebtDTO } from '../dto/debt/Debt.dto';
 import InputListDebtDTO from '../dto/debt/InputListDebt.dto';
 import PaginateDebtDTO from '../dto/debt/PaginateDebt.dto';
@@ -21,13 +26,14 @@ import GetByIdUseCase from 'src/application/usecases/debt/GetDebtById.usecase';
 import UpdateDebtUseCase from 'src/application/usecases/debt/UpdateDebt.usecase';
 import DeleteDebtUseCase from 'src/application/usecases/debt/DeleteDebt.usercase';
 import GetDebtsUseCase from 'src/application/usecases/debt/GetDebts.usecase';
-import CreateDebtDTO from '../dto/debt/CreateDebt.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { RoleGuard } from 'src/application/auth/role/role.guard';
+import { Roles } from 'src/application/auth/roles/roles.decorator';
 
 @Controller('debts')
 @ApiTags('Debt')
 @ApiBearerAuth()
-@UseGuards(AuthGuard('jwt'))
+@UseGuards(AuthGuard('jwt'), RoleGuard)
 export default class DebtController {
   constructor(
     private readonly createDebtUseCase: CreateDebtUseCase,
@@ -61,6 +67,7 @@ export default class DebtController {
     }
   }
 
+  @Roles('admin')
   @Get()
   @ApiOperation({ summary: 'Get a Debt by params' })
   @ApiResponse({ status: 200, type: DebtDTO })
