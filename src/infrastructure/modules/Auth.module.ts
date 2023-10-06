@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import UserModule from './User.module';
 import { JwtModule } from '@nestjs/jwt';
-import { SECRET_KEY } from 'src/commons/envs';
+import { EXPIRATION_TIME_IN_SEGS, SECRET_KEY } from 'src/commons/envs';
 import { MongooseModule } from '@nestjs/mongoose';
 import MongooseUserEntity, {
   MongooseUserSchema,
@@ -28,7 +28,7 @@ import JwtStrategy from 'src/application/strategies/Jwt.strategy';
     UserModule,
     JwtModule.register({
       privateKey: SECRET_KEY,
-      signOptions: { expiresIn: '90s' },
+      signOptions: { expiresIn: `${EXPIRATION_TIME_IN_SEGS}s` },
     }),
   ],
   providers: [

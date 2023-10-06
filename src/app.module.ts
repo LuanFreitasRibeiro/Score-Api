@@ -3,11 +3,12 @@ import { APP_FILTER } from '@nestjs/core';
 import { DefaultExceptionsFilter } from './commons/filters/default-exception.filter';
 import AssetModule from './infrastructure/modules/Asset.module';
 import { MongooseModule } from '@nestjs/mongoose';
-import { DATABASE_URI } from './commons/envs';
+import { DATABASE_URI, EXPIRATION_TIME_IN_SEGS } from './commons/envs';
 import DebtModule from './infrastructure/modules/Debt.module';
 import UserModule from './infrastructure/modules/User.module';
 import ScoreModule from './infrastructure/modules/Score.module';
 import AuthModule from './infrastructure/modules/Auth.module';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import AuthModule from './infrastructure/modules/Auth.module';
     ScoreModule,
     AuthModule,
     MongooseModule.forRoot(DATABASE_URI),
+    CacheModule.register({ ttl: EXPIRATION_TIME_IN_SEGS, isGlobal: true }),
   ],
   providers: [
     {

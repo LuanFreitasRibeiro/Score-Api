@@ -12,7 +12,7 @@ import {
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { DebtDTO } from '../dto/debt/Debt.dto';
 import InputListDebtDTO from '../dto/debt/InputListDebt.dto';
 import PaginateDebtDTO from '../dto/debt/PaginateDebt.dto';
@@ -26,6 +26,7 @@ import { AuthGuard } from '@nestjs/passport';
 
 @Controller('debts')
 @ApiTags('Debt')
+@ApiBearerAuth()
 @UseGuards(AuthGuard('jwt'))
 export default class DebtController {
   constructor(

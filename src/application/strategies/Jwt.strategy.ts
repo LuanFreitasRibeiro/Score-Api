@@ -1,11 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
+import { Cache } from 'cache-manager';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { SECRET_KEY } from 'src/commons/envs';
 
 @Injectable()
 export default class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor() {
+  constructor(@Inject('CACHE_MANAGER') private readonly cacheManager: Cache) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
@@ -14,6 +15,8 @@ export default class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) {
+    const userId: string = payload.sub;
+    await this.cacheManager.set('userId_cached', userId);
     return { id: payload.sub, email: payload.email };
   }
 }

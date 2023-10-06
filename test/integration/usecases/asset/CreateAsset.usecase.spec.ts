@@ -5,6 +5,7 @@ import { Test } from '@nestjs/testing';
 import AssetRepository, {
   AssetSearchParams,
 } from 'src/application/repository/AssetRepository.interface';
+import { Cache } from 'cache-manager';
 import UserRepository from 'src/application/repository/UserRepository.interface';
 import CreateAssetUseCase from 'src/application/usecases/asset/CreateAsset.usecase';
 import Asset from 'src/domain/asset/Asset';
@@ -14,10 +15,18 @@ import MongooseUserRepositoryDatabase from 'src/infrastructure/database/reposito
 import MongooseAssetEntity from 'src/infrastructure/database/repositories/mongoose/schemas/Asset.schema';
 import MongooseUserEntity from 'src/infrastructure/database/repositories/mongoose/schemas/User.schema';
 
+const mockCacheManager = {
+  set: jest.fn(),
+  get: jest.fn(),
+  del: jest.fn(),
+  reset: jest.fn(),
+};
+
 describe('Integration Test - Create Asset Usecase', () => {
   let useCase: CreateAssetUseCase;
   let assetRepository: AssetRepository;
   let userRepository: UserRepository;
+  let cache: Cache;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -39,12 +48,17 @@ describe('Integration Test - Create Asset Usecase', () => {
           provide: getModelToken(MongooseUserEntity.name),
           useValue: {},
         },
+        {
+          provide: 'CACHE_MANAGER',
+          useValue: mockCacheManager,
+        },
       ],
     }).compile();
 
     useCase = moduleRef.get(CreateAssetUseCase);
     assetRepository = moduleRef.get('AssetRepository');
     userRepository = moduleRef.get('UserRepository');
+    cache = moduleRef.get('CACHE_MANAGER');
     jest.clearAllMocks();
   });
 
@@ -52,9 +66,16 @@ describe('Integration Test - Create Asset Usecase', () => {
     expect(useCase).toBeDefined();
     expect(assetRepository).toBeDefined();
     expect(userRepository).toBeDefined();
+    expect(cache).toBeDefined();
   });
 
   it('Should create a Asset', async () => {
+    const user = await User.create(
+      'john.doe@gmail.com',
+      'John Doe',
+      'John@1234',
+      '22668510040',
+    );
     assetRepository = {
       async save(asset: any): Promise<void> {},
       async getById(id: string): Promise<any> {
@@ -76,12 +97,7 @@ describe('Integration Test - Create Asset Usecase', () => {
     userRepository = {
       async save(user: User): Promise<void> {},
       async getOne(email: any): Promise<any> {
-        return User.create(
-          'john.doe@gmail.com',
-          'John Doe',
-          'John@1234',
-          '22668510040',
-        );
+        return user;
       },
       async update(id: string, user: any): Promise<any> {},
       async delete(id: string): Promise<void> {},
@@ -91,9 +107,13 @@ describe('Integration Test - Create Asset Usecase', () => {
       type: 'imovel',
       amount: 15000,
     };
+    const userId: string = user.userId;
+    mockCacheManager.set('userId_cached', userId);
+    mockCacheManager.get('userId_cached');
     const createUseCase = new CreateAssetUseCase(
       assetRepository,
       userRepository,
+      cache,
     );
     const output = await createUseCase.execute(input);
     expect(output.assetId).toBeDefined();

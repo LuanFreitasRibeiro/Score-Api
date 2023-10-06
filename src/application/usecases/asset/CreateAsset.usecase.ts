@@ -5,9 +5,9 @@ import Asset from '../../../domain/asset/Asset';
 import UserRepository from 'src/application/repository/UserRepository.interface';
 import { SERVICE_NAME } from 'src/commons/envs';
 import { DomainError } from 'src/commons/errors/domain-error';
+import { Cache } from 'cache-manager';
 
 type Input = {
-  userId: string;
   type: string;
   amount: number;
 };
@@ -22,17 +22,19 @@ export default class CreateAssetUseCase implements UseCase<Input, Output> {
     readonly assetRepository: AssetRepository,
     @Inject('UserRepository')
     readonly userRepository: UserRepository,
+    @Inject('CACHE_MANAGER') private readonly cacheManager: Cache,
   ) {}
 
   async execute(input: Input): Promise<Output> {
-    const user = await this.userRepository.getOne({ userId: input.userId });
+    const userId = String(await this.cacheManager.get('userId_cached'));
+    const user = await this.userRepository.getOne({ userId: userId });
     if (!user)
       throw new DomainError(
         'User not found',
         `${SERVICE_NAME}/user-not-found`,
         HttpStatus.NOT_FOUND,
       );
-    const asset = Asset.create(input.userId, input.type, input.amount);
+    const asset = Asset.create(userId, input.type, input.amount);
     await this.assetRepository.save(asset);
     return {
       assetId: asset.assetId,
