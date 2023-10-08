@@ -136,7 +136,9 @@ Para a criação de Assets (bens) e Debts (dívidas), eu usei o userId da sessã
 
 #### RabbitMQ and Redis 
 
-A ideia inicial era salvar o score no momento do cadastro do usuário, e a cada novo bem e/ou dívida inserida para esse ele seria publicado um evento no Rabbitmq para atualizar o novo score. Com isso, a consulta do score seria salva em cache com o Redis e as consultas subsequentes pegariam o valor na cache.
+Quando é realizado o cadastro do usuário é criado um evento no RabbitMQ para que seja criado um score para o mesmo, com base no id dele. Quando é realizado o cadastro, atualização e delete de um BEM ou DIVIDA, é gerado um outro evento para que o score dele seja recalculado e atualizado, dessa forma mantendo sempre o score atualizado. 
+
+Será criada uma rota de consulta ao score, quando o usuário consultar a primeira vez será gerado um cache para armezenar esse score. Nas consultas posteriores será recupero o valor em cache.
 
 #### Authentication and Authorization
 
