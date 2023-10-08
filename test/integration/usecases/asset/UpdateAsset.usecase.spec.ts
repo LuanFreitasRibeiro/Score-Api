@@ -8,10 +8,14 @@ import AssetRepository, {
 } from '../../../../src/application/repository/AssetRepository.interface';
 import Asset from '../../../../src/domain/asset/Asset';
 import UpdateAssetUseCase from '../../../../src/application/usecases/asset/UpdateAsset.usecase';
+import ScoreProducer from 'src/application/queue/ScoreProducer.interface';
+import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
+import ScoreProducerRabbitMQ from 'src/infrastructure/rabbitmq/score/Score.producer';
 
 describe('Integration Test - Update Asset Usecase', () => {
   let useCase: UpdateAssetUseCase;
   let assetRepository: AssetRepository;
+  let scoreProducer: ScoreProducer;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -25,17 +29,27 @@ describe('Integration Test - Update Asset Usecase', () => {
           provide: getModelToken(MongooseAssetEntity.name),
           useValue: {},
         },
+        {
+          provide: AmqpConnection,
+          useValue: {},
+        },
+        {
+          provide: 'ScoreProducer',
+          useClass: ScoreProducerRabbitMQ,
+        },
       ],
     }).compile();
 
     useCase = moduleRef.get(UpdateAssetUseCase);
     assetRepository = moduleRef.get('AssetRepository');
+    scoreProducer = moduleRef.get('ScoreProducer');
     jest.clearAllMocks();
   });
 
   it('Should be defined', () => {
     expect(useCase).toBeDefined();
     expect(assetRepository).toBeDefined();
+    expect(scoreProducer).toBeDefined();
   });
 
   it('Should update a Asset', async () => {
@@ -62,7 +76,14 @@ describe('Integration Test - Update Asset Usecase', () => {
       type: 'imovel',
       amount: 15000,
     };
-    const updateUseCase = new UpdateAssetUseCase(assetRepository);
+    scoreProducer = {
+      async createScorePublish(userId: string): Promise<void> {},
+      async updateScorePublish(userId: string): Promise<void> {},
+    };
+    const updateUseCase = new UpdateAssetUseCase(
+      assetRepository,
+      scoreProducer,
+    );
     const output = await updateUseCase.execute(input);
     await expect(output).toBeUndefined();
   });
@@ -91,7 +112,10 @@ describe('Integration Test - Update Asset Usecase', () => {
       type: 'imovel',
       amount: 15000,
     };
-    const updateUseCase = new UpdateAssetUseCase(assetRepository);
+    const updateUseCase = new UpdateAssetUseCase(
+      assetRepository,
+      scoreProducer,
+    );
     await expect(() => updateUseCase.execute(input)).rejects.toThrow(
       new Error('Asset not found'),
     );

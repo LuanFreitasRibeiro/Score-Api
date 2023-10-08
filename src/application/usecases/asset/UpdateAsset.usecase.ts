@@ -3,6 +3,7 @@ import AssetRepository from 'src/application/repository/AssetRepository.interfac
 import UseCase from '../interfaces/UseCase.interface';
 import { DomainError } from 'src/commons/errors/domain-error';
 import { SERVICE_NAME } from 'src/commons/envs';
+import ScoreProducer from 'src/application/queue/ScoreProducer.interface';
 
 type Input = {
   assetId: string;
@@ -16,6 +17,8 @@ export default class UpdateAssetUseCase implements UseCase<Input, Output> {
   constructor(
     @Inject('AssetRepository')
     readonly assetRepository: AssetRepository,
+    @Inject('ScoreProducer')
+    readonly scoreProducer: ScoreProducer,
   ) {}
   async execute(input: Input) {
     const asset = await this.assetRepository.getById(input.assetId);
@@ -30,5 +33,6 @@ export default class UpdateAssetUseCase implements UseCase<Input, Output> {
       type: input.type,
       updatedAt: new Date(),
     });
+    await this.scoreProducer.updateScorePublish(asset.userId);
   }
 }

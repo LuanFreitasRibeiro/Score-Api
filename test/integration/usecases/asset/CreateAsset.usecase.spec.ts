@@ -15,6 +15,9 @@ import MongooseUserRepositoryDatabase from 'src/infrastructure/database/reposito
 import MongooseAssetEntity from 'src/infrastructure/database/repositories/mongoose/schemas/Asset.schema';
 import MongooseUserEntity from 'src/infrastructure/database/repositories/mongoose/schemas/User.schema';
 import { Role } from 'src/commons/enums/Role.enum';
+import ScoreProducer from 'src/application/queue/ScoreProducer.interface';
+import ScoreProducerRabbitMQ from 'src/infrastructure/rabbitmq/score/Score.producer';
+import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
 
 const mockCacheManager = {
   set: jest.fn(),
@@ -28,6 +31,7 @@ describe('Integration Test - Create Asset Usecase', () => {
   let assetRepository: AssetRepository;
   let userRepository: UserRepository;
   let cache: Cache;
+  let scoreProducer: ScoreProducer;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -53,6 +57,14 @@ describe('Integration Test - Create Asset Usecase', () => {
           provide: 'CACHE_MANAGER',
           useValue: mockCacheManager,
         },
+        {
+          provide: 'ScoreProducer',
+          useClass: ScoreProducerRabbitMQ,
+        },
+        {
+          provide: AmqpConnection,
+          useValue: {},
+        },
       ],
     }).compile();
 
@@ -60,6 +72,7 @@ describe('Integration Test - Create Asset Usecase', () => {
     assetRepository = moduleRef.get('AssetRepository');
     userRepository = moduleRef.get('UserRepository');
     cache = moduleRef.get('CACHE_MANAGER');
+    scoreProducer = moduleRef.get('ScoreProducer');
     jest.clearAllMocks();
   });
 
@@ -68,6 +81,7 @@ describe('Integration Test - Create Asset Usecase', () => {
     expect(assetRepository).toBeDefined();
     expect(userRepository).toBeDefined();
     expect(cache).toBeDefined();
+    expect(scoreProducer).toBeDefined();
   });
 
   it('Should create a Asset', async () => {
@@ -109,6 +123,10 @@ describe('Integration Test - Create Asset Usecase', () => {
       type: 'imovel',
       amount: 15000,
     };
+    scoreProducer = {
+      async createScorePublish(userId: string): Promise<void> {},
+      async updateScorePublish(userId: string): Promise<void> {},
+    };
     const userId: string = user.userId;
     mockCacheManager.set('userId_cached', userId);
     mockCacheManager.get('userId_cached');
@@ -116,6 +134,7 @@ describe('Integration Test - Create Asset Usecase', () => {
       assetRepository,
       userRepository,
       cache,
+      scoreProducer
     );
     const output = await createUseCase.execute(input);
     expect(output.assetId).toBeDefined();

@@ -14,6 +14,18 @@ import MongooseUserEntity, {
   MongooseUserSchema,
 } from '../database/repositories/mongoose/schemas/User.schema';
 import MongooseUserRepositoryDatabase from '../database/repositories/mongoose/User.repository';
+import ScoreProducerRabbitMQ from '../rabbitmq/score/Score.producer';
+import RabbitModule from './RabbitMQ.module';
+import MongooseScoreEntity, {
+  MongooseScoreSchema,
+} from '../database/repositories/mongoose/schemas/Score.schema';
+import CalculateScoreUseCase from 'src/application/usecases/score/CalculateScore.usecase';
+import MongooseScoreRepositoryDatabase from '../database/repositories/mongoose/Score.repository';
+import MongooseDebtRepositoryDatabase from '../database/repositories/mongoose/Debt.repository';
+import UpdateScoreUseCase from 'src/application/usecases/score/UpdateScore.usecase';
+import MongooseDebtEntity, {
+  MongooseDebtSchema,
+} from '../database/repositories/mongoose/schemas/Debt.schema';
 
 @Module({
   imports: [
@@ -26,7 +38,16 @@ import MongooseUserRepositoryDatabase from '../database/repositories/mongoose/Us
         name: MongooseUserEntity.name,
         schema: MongooseUserSchema,
       },
+      {
+        name: MongooseScoreEntity.name,
+        schema: MongooseScoreSchema,
+      },
+      {
+        name: MongooseDebtEntity.name,
+        schema: MongooseDebtSchema,
+      },
     ]),
+    RabbitModule,
   ],
   providers: [
     CreateAssetUseCase,
@@ -34,6 +55,8 @@ import MongooseUserRepositoryDatabase from '../database/repositories/mongoose/Us
     GetAssetsUseCase,
     UpdateAssetUseCase,
     DeleteAssetUseCase,
+    CalculateScoreUseCase,
+    UpdateScoreUseCase,
     {
       provide: 'AssetRepository',
       useClass: MongooseAssetRepositoryDatabase,
@@ -41,6 +64,18 @@ import MongooseUserRepositoryDatabase from '../database/repositories/mongoose/Us
     {
       provide: 'UserRepository',
       useClass: MongooseUserRepositoryDatabase,
+    },
+    {
+      provide: 'ScoreRepository',
+      useClass: MongooseScoreRepositoryDatabase,
+    },
+    {
+      provide: 'DebtRepository',
+      useClass: MongooseDebtRepositoryDatabase,
+    },
+    {
+      provide: 'ScoreProducer',
+      useClass: ScoreProducerRabbitMQ,
     },
   ],
   controllers: [AssetController],

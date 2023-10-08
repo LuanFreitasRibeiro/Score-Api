@@ -6,6 +6,7 @@ import UserRepository from 'src/application/repository/UserRepository.interface'
 import { SERVICE_NAME } from 'src/commons/envs';
 import { DomainError } from 'src/commons/errors/domain-error';
 import { Cache } from 'cache-manager';
+import ScoreProducer from 'src/application/queue/ScoreProducer.interface';
 
 type Input = {
   type: string;
@@ -23,6 +24,8 @@ export default class CreateDebtUseCase implements UseCase<Input, Output> {
     @Inject('UserRepository')
     readonly userRepository: UserRepository,
     @Inject('CACHE_MANAGER') private readonly cacheManager: Cache,
+    @Inject('ScoreProducer')
+    readonly scoreProducer: ScoreProducer,
   ) {}
 
   async execute(input: Input): Promise<Output> {
@@ -36,6 +39,7 @@ export default class CreateDebtUseCase implements UseCase<Input, Output> {
       );
     const debt = Debt.create(userId, input.amount, input.type);
     await this.debtRepository.save(debt);
+    await this.scoreProducer.updateScorePublish(userId);
     return {
       debtId: debt.debtId,
     };

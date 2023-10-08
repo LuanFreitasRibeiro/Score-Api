@@ -9,6 +9,7 @@ import UserModule from './infrastructure/modules/User.module';
 import ScoreModule from './infrastructure/modules/Score.module';
 import AuthModule from './infrastructure/modules/Auth.module';
 import { CacheModule } from '@nestjs/cache-manager';
+import RabbitModule from './infrastructure/modules/RabbitMQ.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { CacheModule } from '@nestjs/cache-manager';
     AuthModule,
     MongooseModule.forRoot(DATABASE_URI),
     CacheModule.register({ ttl: EXPIRATION_TIME_IN_SEGS, isGlobal: true }),
+    RabbitModule,
   ],
   providers: [
     {

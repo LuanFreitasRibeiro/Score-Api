@@ -1,31 +1,51 @@
+import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import CreateScoreUseCase from 'src/application/usecases/score/CreateScore.usecase';
+import {
+  RABBITMQ_CREATE_SCORE_EXCHANGE,
+  RABBITMQ_PREFETCH,
+  RABBITMQ_UPDATE_SCORE_EXCHANGE,
+  RABBITMQ_URI,
+} from 'src/commons/envs';
 import MongooseScoreEntity, {
   MongooseScoreSchema,
 } from '../database/repositories/mongoose/schemas/Score.schema';
-import CreateScoreUseCase from 'src/application/usecases/score/CreateScore.usecase';
-import GetScoreByIdUseCase from 'src/application/usecases/score/GetScoreById.usecase';
-import GetScoreByUserIdUseCase from 'src/application/usecases/score/GetScoreByUserId.usecase';
 import MongooseScoreRepositoryDatabase from '../database/repositories/mongoose/Score.repository';
-import MongooseDebtRepositoryDatabase from '../database/repositories/mongoose/Debt.repository';
 import MongooseAssetRepositoryDatabase from '../database/repositories/mongoose/Asset.repository';
-import CalculateScoreUseCase from 'src/application/usecases/score/CalculateScore.usecase';
-import MongooseDebtEntity, {
-  MongooseDebtSchema,
-} from '../database/repositories/mongoose/schemas/Debt.schema';
+import MongooseUserRepositoryDatabase from '../database/repositories/mongoose/User.repository';
 import MongooseAssetEntity, {
   MongooseAssetSchema,
 } from '../database/repositories/mongoose/schemas/Asset.schema';
-import ScoreController from 'src/presentation/controllers/Score.controller';
+import MongooseDebtEntity, {
+  MongooseDebtSchema,
+} from '../database/repositories/mongoose/schemas/Debt.schema';
 import MongooseUserEntity, {
   MongooseUserSchema,
 } from '../database/repositories/mongoose/schemas/User.schema';
-import MongooseUserRepositoryDatabase from '../database/repositories/mongoose/User.repository';
 import ScoreConsumerController from '../rabbitmq/score/Score.consumer';
+import ScoreProducerRabbitMQ from '../rabbitmq/score/Score.producer';
 import UpdateScoreUseCase from 'src/application/usecases/score/UpdateScore.usecase';
+import CalculateScoreUseCase from 'src/application/usecases/score/CalculateScore.usecase';
+import MongooseDebtRepositoryDatabase from '../database/repositories/mongoose/Debt.repository';
 
 @Module({
   imports: [
+    RabbitMQModule.forRoot(RabbitMQModule, {
+      exchanges: [
+        {
+          name: RABBITMQ_CREATE_SCORE_EXCHANGE,
+          type: 'direct',
+        },
+        {
+          name: RABBITMQ_UPDATE_SCORE_EXCHANGE,
+          type: 'direct',
+        },
+      ],
+      uri: RABBITMQ_URI,
+      prefetchCount: RABBITMQ_PREFETCH,
+      connectionInitOptions: { wait: true },
+    }),
     MongooseModule.forFeature([
       {
         name: MongooseScoreEntity.name,
@@ -43,21 +63,21 @@ import UpdateScoreUseCase from 'src/application/usecases/score/UpdateScore.useca
         name: MongooseUserEntity.name,
         schema: MongooseUserSchema,
       },
+      {
+        name: MongooseDebtEntity.name,
+        schema: MongooseDebtSchema,
+      },
     ]),
   ],
   providers: [
+    ScoreProducerRabbitMQ,
+    ScoreConsumerController,
     CreateScoreUseCase,
-    GetScoreByIdUseCase,
-    GetScoreByUserIdUseCase,
     CalculateScoreUseCase,
     UpdateScoreUseCase,
     {
       provide: 'ScoreRepository',
       useClass: MongooseScoreRepositoryDatabase,
-    },
-    {
-      provide: 'DebtRepository',
-      useClass: MongooseDebtRepositoryDatabase,
     },
     {
       provide: 'AssetRepository',
@@ -67,7 +87,11 @@ import UpdateScoreUseCase from 'src/application/usecases/score/UpdateScore.useca
       provide: 'UserRepository',
       useClass: MongooseUserRepositoryDatabase,
     },
+    {
+      provide: 'DebtRepository',
+      useClass: MongooseDebtRepositoryDatabase,
+    },
   ],
-  controllers: [ScoreController, ScoreConsumerController],
+  exports: [RabbitMQModule],
 })
-export default class ScoreModule {}
+export default class RabbitModule {}
