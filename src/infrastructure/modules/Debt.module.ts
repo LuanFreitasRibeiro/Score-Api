@@ -14,6 +14,8 @@ import MongooseUserEntity, {
   MongooseUserSchema,
 } from '../database/repositories/mongoose/schemas/User.schema';
 import MongooseUserRepositoryDatabase from '../database/repositories/mongoose/User.repository';
+import ScoreProducerRabbitMQ from '../rabbitmq/score/Score.producer';
+import RabbitModule from './RabbitMQ.module';
 
 @Module({
   imports: [
@@ -27,6 +29,7 @@ import MongooseUserRepositoryDatabase from '../database/repositories/mongoose/Us
         schema: MongooseUserSchema,
       },
     ]),
+    RabbitModule,
   ],
   providers: [
     CreateDebtUseCase,
@@ -41,6 +44,10 @@ import MongooseUserRepositoryDatabase from '../database/repositories/mongoose/Us
     {
       provide: 'UserRepository',
       useClass: MongooseUserRepositoryDatabase,
+    },
+    {
+      provide: 'ScoreProducer',
+      useClass: ScoreProducerRabbitMQ,
     },
   ],
   controllers: [DebtController],

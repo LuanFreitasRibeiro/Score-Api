@@ -8,7 +8,7 @@ import { DomainError } from 'src/commons/errors/domain-error';
 import { Cache } from 'cache-manager';
 
 type Input = {
-  score: number;
+  userId: string;
 };
 type Output = {
   scoreId: string;
@@ -23,15 +23,15 @@ export default class CreateScoreUseCase implements UseCase<Input, Output> {
     @Inject('CACHE_MANAGER') private readonly cacheManager: Cache,
   ) {}
   async execute(input: Input): Promise<Output> {
-    const userId = String(await this.cacheManager.get('userId_cached'));
-    const user = await this.userRepository.getOne({ userId: userId });
+    const user = await this.userRepository.getOne({ userId: input.userId });
     if (!user)
       throw new DomainError(
         'User not found',
         `${SERVICE_NAME}/user-not-found`,
         HttpStatus.NOT_FOUND,
       );
-    const score = Score.create(userId, input.score);
+    const scoreValue = 0;
+    const score = Score.create(input.userId, scoreValue);
     await this.scoreRepository.save(score);
     return {
       scoreId: score.scoreId,

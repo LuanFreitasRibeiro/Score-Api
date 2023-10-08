@@ -27,8 +27,8 @@ export default class MongooseScoreRepositoryDatabase
     return score == null ? null : MongooseScoreMapper.toEntity(score);
   }
 
-  async update(id: string, score: Score): Promise<void> {
-    await this.ScoreModel.findOneAndUpdate({ scoreId: id }, score, {
+  async update(userId: string, score: Score): Promise<void> {
+    await this.ScoreModel.findOneAndUpdate({ userId: userId }, score, {
       new: true,
     });
   }

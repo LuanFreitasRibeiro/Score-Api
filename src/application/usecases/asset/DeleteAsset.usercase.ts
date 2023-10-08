@@ -3,6 +3,7 @@ import AssetRepository from 'src/application/repository/AssetRepository.interfac
 import UseCase from '../interfaces/UseCase.interface';
 import { SERVICE_NAME } from 'src/commons/envs';
 import { DomainError } from 'src/commons/errors/domain-error';
+import ScoreProducer from 'src/application/queue/ScoreProducer.interface';
 
 type Input = {
   assetId: string;
@@ -14,6 +15,8 @@ export default class DeleteAssetUseCase implements UseCase<Input, Output> {
   constructor(
     @Inject('AssetRepository')
     readonly assetRepository: AssetRepository,
+    @Inject('ScoreProducer')
+    readonly scoreProducer: ScoreProducer,
   ) {}
   async execute(input: Input) {
     const asset = await this.assetRepository.getById(input.assetId);
@@ -23,6 +26,7 @@ export default class DeleteAssetUseCase implements UseCase<Input, Output> {
         `${SERVICE_NAME}/asset-not-found`,
         HttpStatus.NOT_FOUND,
       );
+    await this.scoreProducer.updateScorePublish(asset.userId);
     await this.assetRepository.delete(input.assetId);
   }
 }
