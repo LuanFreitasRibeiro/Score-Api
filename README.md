@@ -20,7 +20,7 @@ http://localhost:3000/swagger
 #docker
 docker-compose up -d
 
-Após executar o comando acima, é necessário esperar um pouco para a aplicação subir por completo no docker.
+Está acontecendo algum problema no docker com o bcrypt, usado para hash de senha, que está travando a subida da aplicação pelo docker. Para rodar a aplicação basta rodar o comando acima que irá subir o RabbitMQ e o Mongo via docker e rodar a aplicação via NPM RUN START
 Deixei o arquivo .ENV liberado para facilitar o processo de execução da aplicação. 
 ```
 

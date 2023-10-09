@@ -27,8 +27,8 @@ import InputListAssetDTO from '../dto/asset/InputListAsset.dto';
 import GetAssetsUseCase from 'src/application/usecases/asset/GetAssets.usecase';
 import PaginateAssetDTO from '../dto/asset/PaginateAsset.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { Roles } from 'src/application/auth/roles/roles.decorator';
-import { RoleGuard } from 'src/application/auth/role/role.guard';
+import { RoleGuard } from 'src/application/auth/guards/role.guard';
+import { Roles } from 'src/application/auth/guards/roles.decorator';
 
 @Controller('assets')
 @ApiTags('Asset')
