@@ -5,8 +5,8 @@ import CreateUserUseCase from 'src/application/usecases/user/CreateUser.usecase'
 import GetUserByEmailUseCase from 'src/application/usecases/user/GetUserByEmail.usecase';
 import GetUserByIdUseCase from 'src/application/usecases/user/GetUserById.usecase';
 import { AuthGuard } from '@nestjs/passport';
-import { Roles } from 'src/application/auth/roles/roles.decorator';
-import { RoleGuard } from 'src/application/auth/role/role.guard';
+import { RoleGuard } from 'src/application/auth/guards/role.guard';
+import { Roles } from 'src/application/auth/guards/roles.decorator';
 
 @Controller('users')
 @ApiTags('User')

@@ -27,8 +27,8 @@ import UpdateDebtUseCase from 'src/application/usecases/debt/UpdateDebt.usecase'
 import DeleteDebtUseCase from 'src/application/usecases/debt/DeleteDebt.usercase';
 import GetDebtsUseCase from 'src/application/usecases/debt/GetDebts.usecase';
 import { AuthGuard } from '@nestjs/passport';
-import { RoleGuard } from 'src/application/auth/role/role.guard';
-import { Roles } from 'src/application/auth/roles/roles.decorator';
+import { RoleGuard } from 'src/application/auth/guards/role.guard';
+import { Roles } from 'src/application/auth/guards/roles.decorator';
 
 @Controller('debts')
 @ApiTags('Debt')
