@@ -143,3 +143,7 @@ Será criada uma rota de consulta ao score, quando o usuário consultar a primei
 #### Authentication and Authorization
 
 Foi implementado. Faltando somente a parte de controle de acesso para ficar completo. Tentei criar um usuário admin no momento em que a collection User é criada, dessa forma teria sempre um usuário admin e eu conseguiria bloquear a rota de createUser somente para os users que possuem essa role.
+
+#### Loggin
+
+Será implementado uma integração com plataformas de loggin como SEQ, NEW RELIC e DATADOG. 
