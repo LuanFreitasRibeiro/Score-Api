@@ -18,8 +18,10 @@ export default class DeleteDebtUseCase implements UseCase<Input, Output> {
     @Inject('ScoreProducer')
     readonly scoreProducer: ScoreProducer,
   ) {}
+
   async execute(input: Input) {
-    const debt = await this.debtRepository.getById(input.debtId);
+    const { debtId } = input;
+    const debt = await this.debtRepository.getById(debtId);
     if (!debt)
       throw new DomainError(
         'Debt not found',
@@ -27,6 +29,6 @@ export default class DeleteDebtUseCase implements UseCase<Input, Output> {
         HttpStatus.NOT_FOUND,
       );
     await this.scoreProducer.updateScorePublish(debt.userId);
-    await this.debtRepository.delete(input.debtId);
+    await this.debtRepository.delete(debtId);
   }
 }

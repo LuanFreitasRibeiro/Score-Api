@@ -20,6 +20,7 @@ export default class GetUserByIdUseCase implements UseCase<Input, Output> {
     @Inject('UserRepository')
     readonly userRepository: UserRepository,
   ) {}
+
   async execute(input: Input): Promise<Output> {
     const user = await this.userRepository.getOne({ userId: input.userId });
     if (!user)
@@ -28,12 +29,12 @@ export default class GetUserByIdUseCase implements UseCase<Input, Output> {
         `${SERVICE_NAME}/user-not-found`,
         HttpStatus.NOT_FOUND,
       );
-
+    const { userId, name, document, email } = user;
     return {
-      userId: user.userId,
-      name: user.name,
-      email: user.email,
-      document: user.document,
+      userId: userId,
+      name: name,
+      email: email,
+      document: document,
     };
   }
 }

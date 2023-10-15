@@ -20,17 +20,19 @@ export default class UpdateDebtUseCase implements UseCase<Input, Output> {
     @Inject('ScoreProducer')
     readonly scoreProducer: ScoreProducer,
   ) {}
+
   async execute(input: Input) {
-    const debt = await this.debtRepository.getById(input.debtId);
+    const { debtId, amount, type } = input;
+    const debt = await this.debtRepository.getById(debtId);
     if (!debt)
       throw new DomainError(
         'Debt not found',
         `${SERVICE_NAME}/debt-not-found`,
         HttpStatus.NOT_FOUND,
       );
-    await this.debtRepository.update(input.debtId, {
-      amount: input.amount,
-      type: input.type,
+    await this.debtRepository.update(debtId, {
+      amount: amount,
+      type: type,
       updatedAt: new Date(),
     });
     await this.scoreProducer.updateScorePublish(debt.userId);

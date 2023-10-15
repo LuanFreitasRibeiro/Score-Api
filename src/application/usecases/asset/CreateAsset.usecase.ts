@@ -37,7 +37,8 @@ export default class CreateAssetUseCase implements UseCase<Input, Output> {
         `${SERVICE_NAME}/user-not-found`,
         HttpStatus.NOT_FOUND,
       );
-    const asset = Asset.create(userId, input.type, input.amount);
+    const { type, amount } = input;
+    const asset = Asset.create(userId, type, amount);
     await this.assetRepository.save(asset);
     await this.scoreProducer.updateScorePublish(userId);
     return {

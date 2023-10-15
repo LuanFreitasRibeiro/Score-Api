@@ -19,6 +19,7 @@ export default class GetUserByEmailUseCase implements UseCase<Input, Output> {
   constructor(
     @Inject('UserRepository') private readonly userRepository: UserRepository,
   ) {}
+
   async execute(input: Input): Promise<Output> {
     const user = await this.userRepository.getOne({ email: input.email });
     if (!user)
@@ -27,11 +28,12 @@ export default class GetUserByEmailUseCase implements UseCase<Input, Output> {
         `${SERVICE_NAME}/score-not-found`,
         HttpStatus.NOT_FOUND,
       );
+    const { userId, name, document, email } = user;
     return {
-      userId: user.userId,
-      name: user.name,
-      email: user.email,
-      document: user.document,
+      userId: userId,
+      name: name,
+      email: email,
+      document: document,
     };
   }
 }

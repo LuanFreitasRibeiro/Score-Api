@@ -20,6 +20,7 @@ export default class GetScoreByIdUseCase implements UseCase<Input, Output> {
   constructor(
     @Inject('ScoreRepository') readonly scoreRepository: ScoreRepository,
   ) {}
+
   async execute(input: Input): Promise<Output> {
     const score = await this.scoreRepository.getOne({ scoreId: input.scoreId });
     if (!score)
@@ -28,12 +29,13 @@ export default class GetScoreByIdUseCase implements UseCase<Input, Output> {
         `${SERVICE_NAME}/score-not-found`,
         HttpStatus.NOT_FOUND,
       );
+    const { scoreId, userId, createdAt, updatedAt } = score;
     return {
-      scoreId: score.scoreId,
+      scoreId: scoreId,
       score: score.score,
-      userId: score.userId,
-      createdAt: score.createdAt,
-      updatedAt: score.updatedAt,
+      userId: userId,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
     };
   }
 }

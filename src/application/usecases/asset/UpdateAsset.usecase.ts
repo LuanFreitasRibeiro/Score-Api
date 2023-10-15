@@ -21,16 +21,17 @@ export default class UpdateAssetUseCase implements UseCase<Input, Output> {
     readonly scoreProducer: ScoreProducer,
   ) {}
   async execute(input: Input) {
-    const asset = await this.assetRepository.getById(input.assetId);
+    const { assetId, amount, type } = input;
+    const asset = await this.assetRepository.getById(assetId);
     if (!asset)
       throw new DomainError(
         'Asset not found',
         `${SERVICE_NAME}/asset-not-found`,
         HttpStatus.NOT_FOUND,
       );
-    await this.assetRepository.update(input.assetId, {
-      amount: input.amount,
-      type: input.type,
+    await this.assetRepository.update(assetId, {
+      amount: amount,
+      type: type,
       updatedAt: new Date(),
     });
     await this.scoreProducer.updateScorePublish(asset.userId);
