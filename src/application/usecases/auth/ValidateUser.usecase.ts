@@ -7,6 +7,7 @@ type Input = {
   email: string;
   password: string;
 };
+
 type Output = {
   userId: string;
   name: string;
@@ -23,16 +24,15 @@ export default class ValidateUserUseCase implements UseCase<Input, Output> {
   async execute(input: Input): Promise<Output> {
     const user = await this.userRepository.getOne({ email: input.email });
     if (!user) return null;
-
-    const isPasswordValid = compareSync(input.password, user.password);
+    const { password, userId, name, email, document, role } = user;
+    const isPasswordValid = compareSync(input.password, password);
     if (!isPasswordValid) return null;
-
     return {
-      userId: user.userId,
-      name: user.name,
-      email: user.email,
-      document: user.document,
-      role: user.role,
+      userId: userId,
+      name: name,
+      email: email,
+      document: document,
+      role: role,
     };
   }
 }

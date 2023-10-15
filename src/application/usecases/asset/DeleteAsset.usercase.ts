@@ -19,7 +19,8 @@ export default class DeleteAssetUseCase implements UseCase<Input, Output> {
     readonly scoreProducer: ScoreProducer,
   ) {}
   async execute(input: Input) {
-    const asset = await this.assetRepository.getById(input.assetId);
+    const { assetId } = input;
+    const asset = await this.assetRepository.getById(assetId);
     if (!asset)
       throw new DomainError(
         'Asset not found',
@@ -27,6 +28,6 @@ export default class DeleteAssetUseCase implements UseCase<Input, Output> {
         HttpStatus.NOT_FOUND,
       );
     await this.scoreProducer.updateScorePublish(asset.userId);
-    await this.assetRepository.delete(input.assetId);
+    await this.assetRepository.delete(assetId);
   }
 }

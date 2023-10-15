@@ -11,13 +11,14 @@ type Output = {
 @Injectable()
 export default class LoginUseCase implements UseCase<Input, Output> {
   constructor(private readonly jwtService: JwtService) {}
-  async execute(input: Input): Promise<Output> {
-    const payload = {
-      sub: input.userId,
-      email: input.email,
-      role: input.role,
-    };
 
+  async execute(input: Input): Promise<Output> {
+    const { userId, email, role } = input;
+    const payload = {
+      sub: userId,
+      email: email,
+      role: role,
+    };
     return {
       token: this.jwtService.sign(payload),
     };

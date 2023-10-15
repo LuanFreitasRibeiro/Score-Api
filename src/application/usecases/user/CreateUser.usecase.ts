@@ -24,14 +24,10 @@ export default class CreateUserUseCase implements UseCase<Input, Output> {
     @Inject('ScoreProducer')
     private scoreProducer: ScoreProducer,
   ) {}
+
   async execute(input: Input): Promise<Output> {
-    const user = User.create(
-      input.email,
-      input.name,
-      input.password,
-      input.document,
-      input.role,
-    );
+    const { email, name, password, document, role } = input;
+    const user = User.create(email, name, password, document, role);
     await this.userRepository.save(user);
     await this.scoreProducer.createScorePublish(user.userId);
     return {

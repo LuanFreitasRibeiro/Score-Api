@@ -22,8 +22,10 @@ export default class CreateScoreUseCase implements UseCase<Input, Output> {
     readonly userRepository: UserRepository,
     @Inject('CACHE_MANAGER') private readonly cacheManager: Cache,
   ) {}
+
   async execute(input: Input): Promise<Output> {
-    const user = await this.userRepository.getOne({ userId: input.userId });
+    const { userId } = input;
+    const user = await this.userRepository.getOne({ userId: userId });
     if (!user)
       throw new DomainError(
         'User not found',
@@ -31,7 +33,7 @@ export default class CreateScoreUseCase implements UseCase<Input, Output> {
         HttpStatus.NOT_FOUND,
       );
     const scoreValue = 0;
-    const score = Score.create(input.userId, scoreValue);
+    const score = Score.create(userId, scoreValue);
     await this.scoreRepository.save(score);
     return {
       scoreId: score.scoreId,

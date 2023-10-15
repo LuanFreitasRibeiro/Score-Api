@@ -20,12 +20,13 @@ export default class GetAssetsUseCase implements UseCase<Input, Output> {
   ) {}
 
   async execute(input: Input): Promise<Output> {
+    const { pageNumber, pageSize, orderBy, order, type } = input;
     const searchParams = {
-      pageNumber: input.pageNumber ?? 1,
-      pageSize: input.pageSize ?? 20,
-      orderBy: input.orderBy ?? 'createdAt',
-      order: input.order ?? 'desc',
-      type: input.type ?? null,
+      pageNumber: pageNumber ?? 1,
+      pageSize: pageSize ?? 20,
+      orderBy: orderBy ?? 'createdAt',
+      order: order ?? 'desc',
+      type: type ?? null,
     };
 
     return this.assetRepository.list(searchParams);

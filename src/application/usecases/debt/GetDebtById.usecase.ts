@@ -16,11 +16,13 @@ type Output = {
   createdAt: Date;
   updatedAt: Date;
 };
+
 export default class GetByIdUseCase implements UseCase<Input, Output> {
   constructor(
     @Inject('DebtRepository')
     readonly debtRepository: DebtRepository,
   ) {}
+
   async execute(input: Input): Promise<Output> {
     const debt = await this.debtRepository.getById(input.debtId);
     if (!debt)
@@ -29,13 +31,14 @@ export default class GetByIdUseCase implements UseCase<Input, Output> {
         `${SERVICE_NAME}/debt-not-found`,
         HttpStatus.NOT_FOUND,
       );
+    const { debtId, userId, type, amount, createdAt, updatedAt } = debt;
     return {
-      debtId: debt.debtId,
-      userId: debt.userId,
-      type: debt.type,
-      amount: debt.amount,
-      createdAt: debt.createdAt,
-      updatedAt: debt.updatedAt,
+      debtId: debtId,
+      userId: userId,
+      type: type,
+      amount: amount,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
     };
   }
 }

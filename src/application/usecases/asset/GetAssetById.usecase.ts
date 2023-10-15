@@ -29,13 +29,15 @@ export default class GetByIdUseCase implements UseCase<Input, Output> {
         `${SERVICE_NAME}/asset-not-found`,
         HttpStatus.NOT_FOUND,
       );
+
+    const { assetId, userId, type, amount, createdAt, updatedAt } = asset;
     return {
-      assetId: asset.assetId,
-      userId: asset.userId,
-      type: asset.type,
-      amount: asset.amount,
-      createdAt: asset.createdAt,
-      updatedAt: asset.updatedAt,
+      assetId: assetId,
+      userId: userId,
+      type: type,
+      amount: amount,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
     };
   }
 }

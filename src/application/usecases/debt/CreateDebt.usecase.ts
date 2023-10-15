@@ -29,6 +29,7 @@ export default class CreateDebtUseCase implements UseCase<Input, Output> {
   ) {}
 
   async execute(input: Input): Promise<Output> {
+    const { amount, type } = input;
     const userId = String(await this.cacheManager.get('userId_cached'));
     const user = await this.userRepository.getOne({ userId: userId });
     if (!user)
@@ -37,7 +38,7 @@ export default class CreateDebtUseCase implements UseCase<Input, Output> {
         `${SERVICE_NAME}/user-not-found`,
         HttpStatus.NOT_FOUND,
       );
-    const debt = Debt.create(userId, input.amount, input.type);
+    const debt = Debt.create(userId, amount, type);
     await this.debtRepository.save(debt);
     await this.scoreProducer.updateScorePublish(userId);
     return {

@@ -8,7 +8,9 @@ type Input = {
   userId: string;
   score: number;
 };
+
 type Output = Promise<void>;
+
 export default class UpdateScoreUseCase implements UseCase<Input, Output> {
   constructor(
     @Inject('ScoreRepository')
