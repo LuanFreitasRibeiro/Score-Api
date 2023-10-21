@@ -128,6 +128,11 @@ request body
     "password": "John@Doe1234",
 }
 ```
+
+## Core Business
+
+A aplicação tem como objetivo principal realizar o cálculo de score com base nos bens e débitos. O cálculo é realizado no usecase _``CalculateScore``_, é realizado a busca dos débitos e dos bens em _``DebtRepository``_ e _``AssetRepository``_. O calculo é realizado com base nos pesos, para bens o peso considerado é de 61% e para dividas o peso é de 39%.
+
 ## Disclaimers
 
 #### Creates
