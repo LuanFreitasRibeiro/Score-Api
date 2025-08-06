@@ -3,7 +3,7 @@
 API de cálculo de score baseado nas dívidas e bens do usuário.
 
 ## Installation
-
+teste
 ```bash
 $ npm install
 ```
